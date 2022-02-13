@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>JsonPowerDB Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+        integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+
+</head>
+
+<body>
+    <div class="container ">
+        <div class="text-center p-3 m-3">
+            <h2>Employee Details</h2>
+        </div>
+
+        <form id="empForm" method="post">
+            <div class="d-flex justify-content-center">
+
+                <div class="col-md-7">
+
+                    <div class="row form-group mb-2">
+                        <div class="col-md-3">
+                            <label for="empId" class="col-form-label">Employee Id</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" id="empId" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-group mb-2">
+                        <div class="col-md-3">
+                            <label for="empName" class="form-label">Name</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" id="empName" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-group mb-2">
+                        <div class="col-md-3">
+                            <label for="empPhone" class="form-label">Phone</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" id="empPhone" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-group mb-2">
+                        <div class="col-md-3">
+                            <label for="empEmail" class="form-label">Email</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="email" id="empEmail" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-md-3">
+
+                        </div>
+                        <div class="col-md-9">
+                            <input type="button" id="btnSave" class="btn btn-primary px-3" value="Save"
+                                onclick="saveEmployee();">
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+    <script>
+        function saveEmployee() {
+            var jsonObj = validateFormAndGetData();
+            if (jsonObj === "") {
+                return;
+            }
+            //console.log(jsonObj)
+            var httpRequest = createPUTRequest("90938399|-31948828383946784|90947571", jsonObj, "Employee", "Emp-Rel");
+
+            jQuery.ajaxSetup({ async: false });
+            var resultObj = executeCommandAtGivenBaseUrl(httpRequest,
+                "http://api.login2explore.com:5577", "/api/iml");
+
+            //alert(JSON.stringify(resultObj));
+            jQuery.ajaxSetup({ async: true });
+
+            resetForm();
+        }
+
+        function validateFormAndGetData() {
+            var varEmpId = $('#empId').val();
+            if (varEmpId === "") {
+                alert('Employee id is required');
+                return "";
+            }
+            var varempName = $('#empName').val();
+            if (varempName === "") {
+                alert('Employee Name is required');
+                return "";
+            }
+            var varempPhone = $('#empPhone').val();
+            if (varempPhone === "") {
+                alert('Employee Phone Number is required');
+                return "";
+            }
+            var varempEmail = $('#empEmail').val();
+            if (varempEmail === "") {
+                alert('Employee Email is required');
+                return "";
+            }
+            var jsonData = {
+                empId: varEmpId,
+                empName: varempName,
+                empPhone: varempPhone,
+                empEmail: varempEmail
+            }
+            return JSON.stringify(jsonData);
+        }
+        function resetForm() {
+            $('#empId').val("");
+            $('#empName').val("");
+            $('#empPhone').val("");
+            $('#empEmail').val("");
+        }
+
+    </script>
+</body>
+
+</html>
